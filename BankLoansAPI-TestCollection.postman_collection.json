@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "4a02e59e-2791-4bcd-b579-fa55780cb4ed",
-		"name": "BankLoansAPI-TestCollection",
+		"_postman_id": "b85bc05d-c0b0-429a-a5ce-4eae176d77f9",
+		"name": "LoanAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "dbd5b0b2-e1da-4fa1-b941-1ff466d6d629",
+						"id": "819ddd96-3a3b-4dd4-a283-fed575d084a7",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"postman.setEnvironmentVariable(\"clientId\", jsonData.clientId);",
@@ -49,7 +49,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n   \"clientName\":\"DefaultApplication\",\n   \"owner\":\"admin\",\n   \"grantType\":\"password refresh_token\",\n   \"saasApp\":true\n}",
+					"raw": "{\n   \"clientName\":\"TestApplication\",\n   \"owner\":\"admin\",\n   \"grantType\":\"password refresh_token\",\n   \"saasApp\":true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -78,7 +78,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7996acb1-e75d-4316-97c9-1ce1722df02c",
+						"id": "5141bc59-fdbb-454a-b7ce-d67a982da7f7",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
@@ -144,7 +144,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8b374c5f-001d-4f3f-a3df-c2aa9c225596",
+						"id": "bcd5ff20-99d5-45c8-ac7f-2f4727b62902",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"postman.setEnvironmentVariable(\"applicationId\", jsonData.applicationId);"
@@ -175,7 +175,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"{{clientName}}\",\n  \"throttlingPolicy\": \"Unlimited\",\n  \"tokenType\":\"JWT\",\n  \"description\": \"Sample application\",\n  \"owner\":\"admin\",\n  \"status\": \"APPROVED\"\n}",
+					"raw": "{\n  \"name\": \"{{clientName}}\",\n  \"throttlingPolicy\": \"Unlimited\",\n  \"tokenType\":\"JWT\",\n  \"description\": \"Sample calculator application\",\n  \"owner\":\"admin\",\n  \"status\": \"APPROVED\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -206,7 +206,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7ebc777f-7821-4227-8a39-6a41f8e89ab2",
+						"id": "63378dc6-90c6-4b4e-9e0a-7843fdfd13bb",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"postman.setEnvironmentVariable(\"apiId\", jsonData.list[0].id);"
@@ -219,7 +219,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis",
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis?name:LoansAPI",
 					"protocol": "https",
 					"host": [
 						"{{baseUrl}}"
@@ -231,6 +231,12 @@
 						"store",
 						"v1",
 						"apis"
+					],
+					"query": [
+						{
+							"key": "name:LoansAPI",
+							"value": null
+						}
 					]
 				}
 			},
@@ -242,7 +248,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c2a38d0e-8b50-402d-8547-44e2ad040d7d",
+						"id": "564a8aa7-87ce-4554-b8e8-3cc1a346347f",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -274,7 +280,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"applicationId\": \"{{applicationId}}\",\n  \"apiId\": \"{{apiId}}\",\n  \"throttlingPolicy\": \"Unlimited\"\n}",
+					"raw": "{\n  \"applicationId\": \"{{applicationId}}\",\n  \"apiId\": \"{{apiId}}\",\n  \"throttlingPolicy\": \"Gold\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -305,7 +311,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "39fb3552-7e80-4c6a-9642-8172e27d0446",
+						"id": "6f8400fd-318b-4a5a-9b4c-fa6aeab1f7ff",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"postman.setEnvironmentVariable(\"app_access_token\", jsonData.token.accessToken);"
@@ -364,14 +370,16 @@
 			"response": []
 		},
 		{
-			"name": "Delete Application",
+			"name": "Request for a loan",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "e56ef15f-4581-4e02-9269-9b5f870dc275",
+						"id": "e25e0168-0117-4bde-8890-3d554b8de0c2",
 						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
 							"pm.test(\"Status test\", function () {",
+							"    pm.expect(jsonData.Status.Message).to.equals(\"The loan request with reference AA-16621 has been initiated\");",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -385,27 +393,217 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{access_token}}",
+							"value": "{{app_access_token}}",
 							"type": "string"
 						}
 					]
 				},
-				"method": "DELETE",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"CID\":\"6621441110\",\n\t\"Number\" : \"4104321122446\",\n\t\"Name\": \"Paige Turner\",\n\t\"Branch\" : \"City\",\n\t\"Type\": \"Personal\",\n\t\"Amount\": 150000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/applications/{{applicationId}}",
-					"protocol": "https",
+					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/request",
+					"protocol": "http",
 					"host": [
 						"{{baseUrl}}"
 					],
-					"port": "9443",
+					"port": "8280",
 					"path": [
-						"api",
-						"am",
-						"store",
-						"v1",
-						"applications",
-						"{{applicationId}}"
+						"loans",
+						"v1.0.0",
+						"request"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approve a loan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "928beff4-1cfc-420a-baaf-87003ddd3a2b",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"Status test\", function () {",
+							"    pm.expect(jsonData.Status.Message).to.equals(\"The loan request has been sent for administrator approval\");",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{app_access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"CID\":\"6621441110\",\n\t\"Number\" : \"4104321122446\",\n\t\"Name\": \"Mark Pete\",\n\t\"Branch\" : \"City\",\n\t\"Type\": \"Personal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/approve/AA-16621",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8280",
+					"path": [
+						"loans",
+						"v1.0.0",
+						"approve",
+						"AA-16621"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get loan information",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "900a4293-03f4-4332-9ad4-b947eea62fac",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"Status test\", function () {",
+							"    pm.expect(jsonData.Loan.Id).to.equals(\"AA-16621\");",
+							"    pm.expect(jsonData.Loan.Name).to.equals(\"Paige Turner\");",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{app_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/AA-16621",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8280",
+					"path": [
+						"loans",
+						"v1.0.0",
+						"AA-16621"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get loan types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3d7de001-8648-4cf6-abfb-384ceb4ee1ef",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{app_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/types",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8280",
+					"path": [
+						"loans",
+						"v1.0.0",
+						"types"
 					]
 				}
 			},
@@ -414,32 +612,32 @@
 	],
 	"variable": [
 		{
-			"id": "139a6e5c-76fa-4198-ad3a-3b4de0446219",
+			"id": "172fcb6a-4580-4ac7-8c9f-346a847c60b9",
 			"key": "baseUrl",
 			"value": "localhost"
 		},
 		{
-			"id": "ac10a91b-097b-4ab6-952e-18626115fbe2",
+			"id": "1f500cf4-6178-486d-9d04-ba645c95ec3f",
 			"key": "clientName",
 			"value": "sampleMobileApp"
 		},
 		{
-			"id": "a3cc7a74-7155-413a-b119-6c89396bb8f5",
+			"id": "f13a2147-3399-4e6f-8a0a-81fda7fabf03",
 			"key": "username",
 			"value": "admin"
 		},
 		{
-			"id": "ae358dc9-85c8-4c03-99fb-128d374d3257",
+			"id": "30cdbab9-ea7f-46f7-9627-fada56967e4e",
 			"key": "password",
 			"value": "admin"
 		},
 		{
-			"id": "d0a4cabd-45ba-4a46-a325-e891617e73fd",
+			"id": "5d51f850-8bbc-48ef-a830-9892b546c076",
 			"key": "grant-type",
 			"value": "password"
 		},
 		{
-			"id": "4adae790-2245-49a8-bed1-f1ed735c55e5",
+			"id": "9444b92b-5e5d-4365-8986-d104e80a4a10",
 			"key": "userID",
 			"value": "19"
 		}
