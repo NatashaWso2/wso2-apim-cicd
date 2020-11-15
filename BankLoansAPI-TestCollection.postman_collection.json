@@ -219,7 +219,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis",
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis?name:LoansAPI",
 					"protocol": "https",
 					"host": [
 						"{{baseUrl}}"
