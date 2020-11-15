@@ -209,8 +209,6 @@
 						"id": "63378dc6-90c6-4b4e-9e0a-7843fdfd13bb",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"console.log(\"#######################\");",
-							"console.log(jsonData);",
 							"postman.setEnvironmentVariable(\"apiId\", jsonData.list[0].id);"
 						],
 						"type": "text/javascript"
