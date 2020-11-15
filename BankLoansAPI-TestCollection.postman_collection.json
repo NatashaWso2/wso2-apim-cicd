@@ -49,7 +49,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n   \"clientName\":\"{{clientName}}\",\n   \"owner\":\"admin\",\n   \"grantType\":\"password refresh_token\",\n   \"saasApp\":true\n}",
+					"raw": "{\n   \"clientName\":\"TestApplication\",\n   \"owner\":\"admin\",\n   \"grantType\":\"password refresh_token\",\n   \"saasApp\":true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -604,6 +604,54 @@
 						"loans",
 						"v1.0.0",
 						"types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Application",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e8f51f2-5429-41c9-bd49-02814ee5a785",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/applications/{{applicationId}}",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"api",
+						"am",
+						"store",
+						"v1",
+						"applications",
+						"{{applicationId}}"
 					]
 				}
 			},
