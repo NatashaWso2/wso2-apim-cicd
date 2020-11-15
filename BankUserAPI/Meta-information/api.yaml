@@ -1,0 +1,32 @@
+id:
+  providerName: admin
+  apiName: BankUserAPI
+  version: v1
+type: HTTP
+context: /users/v1/v1
+contextTemplate: /users/v1/{version}
+availableTiers:
+- name: Unlimited
+status: CREATED
+visibility: public
+transports: http,https
+corsConfiguration:
+  corsConfigurationEnabled: true
+  accessControlAllowOrigins:
+  - '*'
+  accessControlAllowHeaders:
+  - authorization
+  - Access-Control-Allow-Origin
+  - Content-Type
+  - SOAPAction
+  - apikey
+  accessControlAllowMethods:
+  - GET
+  - PUT
+  - POST
+  - DELETE
+  - PATCH
+  - OPTIONS
+endpointConfig: '{"endpoint_type":"http","production_endpoints":{"url":"http://3.19.209.74:8595/api/users"},"sandbox_endpoints":{"url":"http://3.19.209.74:8595/api/users"}}'
+isDefaultVersion: true
+enableStore: true

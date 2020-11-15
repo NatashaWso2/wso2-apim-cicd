@@ -1,0 +1,104 @@
+components:
+  securitySchemes:
+    default:
+      flows:
+        implicit:
+          authorizationUrl: https://test.com
+          scopes: {}
+      type: oauth2
+info:
+  title: BankUserAPI
+  version: v1
+openapi: 3.0.1
+paths:
+  /*:
+    delete:
+      responses:
+        "200":
+          description: OK
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        optional: false
+        security-types:
+        - oauth2
+        - api_key
+    get:
+      responses:
+        "200":
+          description: OK
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        optional: false
+        security-types:
+        - oauth2
+        - api_key
+    post:
+      responses:
+        "200":
+          description: OK
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        optional: false
+        security-types:
+        - oauth2
+        - api_key
+    put:
+      responses:
+        "200":
+          description: OK
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        optional: false
+        security-types:
+        - oauth2
+        - api_key
+security:
+- default: []
+servers:
+- url: /
+x-wso2-auth-header: Authorization
+x-wso2-basePath: /users/v1
+x-wso2-cors:
+  accessControlAllowCredentials: false
+  accessControlAllowHeaders:
+  - authorization
+  - Access-Control-Allow-Origin
+  - Content-Type
+  - SOAPAction
+  - apikey
+  accessControlAllowMethods:
+  - GET
+  - PUT
+  - POST
+  - DELETE
+  - PATCH
+  - OPTIONS
+  accessControlAllowOrigins:
+  - '*'
+  corsConfigurationEnabled: false
+x-wso2-production-endpoints:
+  type: http
+  urls:
+  - http://3.19.209.74:8595/api/users
+x-wso2-response-cache:
+  cacheTimeoutInSeconds: 300
+  enabled: false
+x-wso2-sandbox-endpoints:
+  type: http
+  urls:
+  - http://3.19.209.74:8595/api/users
+x-wso2-transports:
+- http
+- https
