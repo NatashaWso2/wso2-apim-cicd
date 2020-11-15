@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "b85bc05d-c0b0-429a-a5ce-4eae176d77f9",
-		"name": "LoanAPI",
+		"name": "BankPayment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -215,11 +215,18 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
 				"url": {
-					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis?query=name:LoansAPI",
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis?query=name:BankPaymentsAPI",
 					"protocol": "https",
 					"host": [
 						"{{baseUrl}}"
@@ -235,7 +242,7 @@
 					"query": [
 						{
 							"key": "query",
-							"value": "name:LoansAPI"
+							"value": "name:BankPaymentsAPI"
 						}
 					]
 				}
@@ -370,7 +377,7 @@
 			"response": []
 		},
 		{
-			"name": "Request for a loan",
+			"name": "Perform Credit Card Bill Payments",
 			"event": [
 				{
 					"listen": "test",
@@ -379,7 +386,8 @@
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"pm.test(\"Status test\", function () {",
-							"    pm.expect(jsonData.Status.Message).to.equals(\"The loan request with reference AA-16621 has been initiated\");",
+							"    pm.expect(jsonData.Status).to.equals(\"Credit card bill payment is successful\");",
+							"    pm.expect(jsonData.PaymentID).to.equals(\"PI-100001\");",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -409,7 +417,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"CID\":\"6621441110\",\n\t\"Number\" : \"4104321122446\",\n\t\"Name\": \"Paige Turner\",\n\t\"Branch\" : \"City\",\n\t\"Type\": \"Personal\",\n\t\"Amount\": 150000\n}",
+					"raw": "{\n\t\"CID\":\"6621441110\",\n\t\"Number\" : \"4104321122446\",\n\t\"Name\": \"Paige Turner\",\n\t\"Branch\" : \"City\",\n\t\"Type\": \"Personal\",\n\t\"Amount\": 1500,\n    \"Type\": \"CreditCard\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -417,32 +425,34 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/request",
+					"raw": "http://{{baseUrl}}:8280/bank/payments/v1.0.0/creditcard",
 					"protocol": "http",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"port": "8280",
 					"path": [
-						"loans",
+						"bank",
+						"payments",
 						"v1.0.0",
-						"request"
+						"creditcard"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Approve a loan",
+			"name": "Perform Utility Bill Payments",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "928beff4-1cfc-420a-baaf-87003ddd3a2b",
+						"id": "b75fce63-f05f-4d57-b55a-c3c215bc6bb8",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"pm.test(\"Status test\", function () {",
-							"    pm.expect(jsonData.Status.Message).to.equals(\"The loan request has been sent for administrator approval\");",
+							"    pm.expect(jsonData.Status).to.equals(\"Utility bill payment is successful\");",
+							"    pm.expect(jsonData.PaymentID).to.equals(\"PI-138002\");",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -472,7 +482,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"CID\":\"6621441110\",\n\t\"Number\" : \"4104321122446\",\n\t\"Name\": \"Mark Pete\",\n\t\"Branch\" : \"City\",\n\t\"Type\": \"Personal\"\n}",
+					"raw": "{\n\t\"CID\":\"6621441110\",\n\t\"Number\" : \"4104321122446\",\n\t\"Name\": \"Paige Turner\",\n\t\"Branch\" : \"City\",\n\t\"Amount\": 1000,\n    \"Type\": \"Utility-Water\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -480,130 +490,17 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/approve/AA-16621",
+					"raw": "http://{{baseUrl}}:8280/bank/payments/v1.0.0/utility",
 					"protocol": "http",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"port": "8280",
 					"path": [
-						"loans",
+						"bank",
+						"payments",
 						"v1.0.0",
-						"approve",
-						"AA-16621"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get loan information",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "900a4293-03f4-4332-9ad4-b947eea62fac",
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"pm.test(\"Status test\", function () {",
-							"    pm.expect(jsonData.Loan.Id).to.equals(\"AA-16621\");",
-							"    pm.expect(jsonData.Loan.Name).to.equals(\"Paige Turner\");",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{app_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/AA-16621",
-					"protocol": "http",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"port": "8280",
-					"path": [
-						"loans",
-						"v1.0.0",
-						"AA-16621"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get loan types",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "3d7de001-8648-4cf6-abfb-384ceb4ee1ef",
-						"exec": [
-							"pm.test(\"Status test\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{app_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{baseUrl}}:8280/loans/v1.0.0/types",
-					"protocol": "http",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"port": "8280",
-					"path": [
-						"loans",
-						"v1.0.0",
-						"types"
+						"utility"
 					]
 				}
 			},
@@ -667,7 +564,7 @@
 		{
 			"id": "1f500cf4-6178-486d-9d04-ba645c95ec3f",
 			"key": "clientName",
-			"value": "TestApplication"
+			"value": "sampleMobileApp"
 		},
 		{
 			"id": "f13a2147-3399-4e6f-8a0a-81fda7fabf03",
