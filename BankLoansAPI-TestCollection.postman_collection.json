@@ -1,0 +1,448 @@
+{
+	"info": {
+		"_postman_id": "4a02e59e-2791-4bcd-b579-fa55780cb4ed",
+		"name": "BankLoansAPI-TestCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dbd5b0b2-e1da-4fa1-b941-1ff466d6d629",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"clientId\", jsonData.clientId);",
+							"postman.setEnvironmentVariable(\"clientSecret\", jsonData.clientSecret);",
+							"postman.setEnvironmentVariable(\"clientName\", jsonData.clientName);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"clientName\":\"DefaultApplication\",\n   \"owner\":\"admin\",\n   \"grantType\":\"password refresh_token\",\n   \"saasApp\":true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/client-registration/v0.17/register",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"client-registration",
+						"v0.17",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7996acb1-e75d-4316-97c9-1ce1722df02c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+							"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{clientSecret}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{clientId}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{baseUrl}}:8243/token?grant_type={{grant-type}}&username={{username}}&password={{password}}&scope=apim:subscribe",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "8243",
+					"path": [
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "{{grant-type}}"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}"
+						},
+						{
+							"key": "scope",
+							"value": "apim:subscribe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Application",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b374c5f-001d-4f3f-a3df-c2aa9c225596",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"applicationId\", jsonData.applicationId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{clientName}}\",\n  \"throttlingPolicy\": \"Unlimited\",\n  \"tokenType\":\"JWT\",\n  \"description\": \"Sample application\",\n  \"owner\":\"admin\",\n  \"status\": \"APPROVED\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/applications",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"api",
+						"am",
+						"store",
+						"v1",
+						"applications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get APIs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7ebc777f-7821-4227-8a39-6a41f8e89ab2",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"apiId\", jsonData.list[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"api",
+						"am",
+						"store",
+						"v1",
+						"apis"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Subscription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c2a38d0e-8b50-402d-8547-44e2ad040d7d",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"applicationId\": \"{{applicationId}}\",\n  \"apiId\": \"{{apiId}}\",\n  \"throttlingPolicy\": \"Unlimited\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/subscriptions",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"api",
+						"am",
+						"store",
+						"v1",
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Application Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "39fb3552-7e80-4c6a-9642-8172e27d0446",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"app_access_token\", jsonData.token.accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"keyType\": \"PRODUCTION\",\n  \"grantTypesToBeSupported\": [\n    \"password\",\n    \"client_credentials\"\n  ],\n  \"validityTime\": 3600\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/applications/{{applicationId}}/generate-keys",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"api",
+						"am",
+						"store",
+						"v1",
+						"applications",
+						"{{applicationId}}",
+						"generate-keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Application",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e56ef15f-4581-4e02-9269-9b5f870dc275",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/applications/{{applicationId}}",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"port": "9443",
+					"path": [
+						"api",
+						"am",
+						"store",
+						"v1",
+						"applications",
+						"{{applicationId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "139a6e5c-76fa-4198-ad3a-3b4de0446219",
+			"key": "baseUrl",
+			"value": "localhost"
+		},
+		{
+			"id": "ac10a91b-097b-4ab6-952e-18626115fbe2",
+			"key": "clientName",
+			"value": "sampleMobileApp"
+		},
+		{
+			"id": "a3cc7a74-7155-413a-b119-6c89396bb8f5",
+			"key": "username",
+			"value": "admin"
+		},
+		{
+			"id": "ae358dc9-85c8-4c03-99fb-128d374d3257",
+			"key": "password",
+			"value": "admin"
+		},
+		{
+			"id": "d0a4cabd-45ba-4a46-a325-e891617e73fd",
+			"key": "grant-type",
+			"value": "password"
+		},
+		{
+			"id": "4adae790-2245-49a8-bed1-f1ed735c55e5",
+			"key": "userID",
+			"value": "19"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
