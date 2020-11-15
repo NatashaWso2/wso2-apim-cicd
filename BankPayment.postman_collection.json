@@ -209,6 +209,8 @@
 						"id": "63378dc6-90c6-4b4e-9e0a-7843fdfd13bb",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
+							"console.log(\"#######################\");",
+							"console.log(jsonData);",
 							"postman.setEnvironmentVariable(\"apiId\", jsonData.list[0].id);"
 						],
 						"type": "text/javascript"
@@ -223,7 +225,13 @@
 				"header": [],
 				"body": {
 					"mode": "formdata",
-					"formdata": []
+					"formdata": [
+						{
+							"key": "query",
+							"value": "name:BankPaymentsAPI",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
 					"raw": "https://{{baseUrl}}:9443/api/am/store/v1/apis?query=name:BankPaymentsAPI",
