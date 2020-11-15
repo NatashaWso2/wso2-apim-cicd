@@ -234,8 +234,8 @@
 					],
 					"query": [
 						{
-							"key": "name:LoansAPI",
-							"value": null
+							"name": "query",
+							"value": "name:LoansAPI"
 						}
 					]
 				}
