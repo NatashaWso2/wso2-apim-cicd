@@ -1,0 +1,99 @@
+pipeline {
+    triggers {
+       githubPush()
+    }
+    agent any
+    tools {nodejs "Node"}
+    environment {
+        CI = 'true'
+        CURR_DIR = pwd()
+        DEV_ENV = 'dev'
+        PROD_ENV = 'prod'
+	TEST_SCRIPT_FILE = 'BankPayment.postman_collection.json' 
+    }
+    stages {
+        
+        stage('Preparation') {
+            steps{
+                git branch: "master",
+                url: 'https://github.com/NatashaWso2/wso2-apim-cicd',
+                credentialsId: 'github-credentials'
+            }
+        }
+	stage('Initializing API Artifacts') {
+            environment{
+                RETRY = '80'
+            }
+            steps {
+		echo 'Initializing API project'
+                sh 'apictl init SampleAPIProject --oas Bank-Payments-Swagger.yaml --force=true'
+            }
+        }
+        stage('Deploy to Dev Environment') {
+            environment{
+                RETRY = '80'
+            }
+            steps {
+                echo 'Logging into $DEV_ENV'
+                withCredentials([usernamePassword(credentialsId: 'dev-apim', usernameVariable: 'DEV_USERNAME', passwordVariable: 'DEV_PASSWORD')]) {
+                    sh 'apictl login $DEV_ENV -u $DEV_USERNAME -p $DEV_PASSWORD -k'                        
+                }
+		
+                echo 'Deploying to $DEV_ENV'
+                sh 'apictl import-api -f SampleAPIProject -e $DEV_ENV -k --preserve-provider --update --verbose' 
+                
+		sleep 10
+
+                echo 'Publishing the API in $DEV_ENV'
+                sh 'apictl change-status api -a Publish -n BankPaymentsAPI -v v1.0.0 -e $DEV_ENV -k'
+                
+                sleep 10
+
+            }
+        }
+	stage('Run Tests') {
+            steps {
+                echo 'Running tests in $DEV_ENV'
+                sh 'newman run $CURR_DIR/$TEST_SCRIPT_FILE --insecure' 
+            }
+        }
+	
+	stage('Deploy to Production Environment') {
+            environment{
+                RETRY = '80'
+            }
+            steps {
+                
+		echo 'Logging into Production Environment'
+                withCredentials([usernamePassword(credentialsId: 'prod-apim', usernameVariable: 'PROD_USERNAME', passwordVariable: 'PROD_PASSWORD')]) {
+                    sh 'apictl login $PROD_ENV -u $PROD_USERNAME -p $PROD_PASSWORD -k'                        
+                }
+		
+		
+		echo 'Initializing API project'
+                sh 'apictl init SampleAPIProjectProd --oas Bank-Payments-Swagger.yaml --force=true'
+                
+		echo 'Deploying to Production Environment'
+                sh 'apictl import-api -f SampleAPIProjectProd -e $PROD_ENV -k --preserve-provider --update --verbose' 
+                
+		sleep 10
+
+                echo 'Publishing the API in Production Environment'
+                sh 'apictl change-status api -a Publish -n BankPaymentsAPI -v v1.0.0 -e $PROD_ENV -k'
+
+            }
+        }
+	
+    }
+    post {
+        cleanup {
+            deleteDir()
+            dir("${workspace}@tmp") {
+                deleteDir()
+            }
+            dir("${workspace}@script") {
+                deleteDir()
+            }
+        }
+    }
+}
