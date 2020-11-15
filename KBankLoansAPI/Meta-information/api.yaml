@@ -1,10 +1,10 @@
 id:
   providerName: admin
-  apiName: BankUserAPI
-  version: v1
+  apiName: KBankLoansAPI
+  version: v1.0.0
 type: HTTP
-context: /users/v1/v1
-contextTemplate: /users/v1/{version}
+context: /kbank/loans/v1.0.0/v1.0.0
+contextTemplate: /kbank/loans/v1.0.0/{version}
 availableTiers:
 - name: Unlimited
 status: CREATED
@@ -20,6 +20,7 @@ corsConfiguration:
   - Content-Type
   - SOAPAction
   - apikey
+  - testKey
   accessControlAllowMethods:
   - GET
   - PUT
@@ -27,6 +28,6 @@ corsConfiguration:
   - DELETE
   - PATCH
   - OPTIONS
-endpointConfig: '{"endpoint_type":"http","production_endpoints":{"url":"http://3.19.209.74:8595/api/users"},"sandbox_endpoints":{"url":"http://3.19.209.74:8595/api/users"}}'
+endpointConfig: '{"endpoint_type":"http","production_endpoints":{"url":"http://localhost:9193/loans"},"sandbox_endpoints":{"url":"http://localhost:9193/loans"}}'
 isDefaultVersion: true
 enableStore: true

@@ -1,34 +1,45 @@
 components:
+  schemas:
+    LoanRequest:
+      properties:
+        Amount:
+          type: integer
+        Branch:
+          type: string
+        CID:
+          type: string
+        Name:
+          type: string
+        Number:
+          type: string
+        Type:
+          type: string
   securitySchemes:
     default:
       flows:
         implicit:
-          authorizationUrl: https://test.com
+          authorizationUrl: ""
           scopes: {}
       type: oauth2
 info:
-  title: BankUserAPI
-  version: v1
+  title: KBankLoansAPI
+  version: v1.0.0
 openapi: 3.0.1
 paths:
-  /*:
-    delete:
-      responses:
-        "200":
-          description: OK
-      security:
-      - default: []
-      x-auth-type: Application & Application User
-      x-throttling-tier: Unlimited
-      x-wso2-application-security:
-        optional: false
-        security-types:
-        - oauth2
-        - api_key
+  /{loan_id}:
     get:
+      parameters:
+      - explode: false
+        in: path
+        name: loan_id
+        required: true
+        schema:
+          format: string
+          type: string
+        style: simple
       responses:
         "200":
-          description: OK
+          description: ok
       security:
       - default: []
       x-auth-type: Application & Application User
@@ -37,11 +48,26 @@ paths:
         optional: false
         security-types:
         - oauth2
-        - api_key
+  /approve/{loan_id}:
     post:
+      parameters:
+      - explode: false
+        in: path
+        name: loan_id
+        required: true
+        schema:
+          format: string
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
       responses:
         "200":
-          description: OK
+          description: ok
       security:
       - default: []
       x-auth-type: Application & Application User
@@ -50,11 +76,18 @@ paths:
         optional: false
         security-types:
         - oauth2
-        - api_key
-    put:
+  /request:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanRequest'
+        required: true
       responses:
         "200":
-          description: OK
+          description: ok
       security:
       - default: []
       x-auth-type: Application & Application User
@@ -63,13 +96,26 @@ paths:
         optional: false
         security-types:
         - oauth2
-        - api_key
+  /types:
+    get:
+      parameters: []
+      responses:
+        "200":
+          description: ok
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        optional: false
+        security-types:
+        - oauth2
 security:
 - default: []
 servers:
 - url: /
 x-wso2-auth-header: Authorization
-x-wso2-basePath: /users/v1
+x-wso2-basePath: /kbank/loans/v1.0.0
 x-wso2-cors:
   accessControlAllowCredentials: false
   accessControlAllowHeaders:
@@ -78,6 +124,7 @@ x-wso2-cors:
   - Content-Type
   - SOAPAction
   - apikey
+  - testKey
   accessControlAllowMethods:
   - GET
   - PUT
@@ -91,14 +138,14 @@ x-wso2-cors:
 x-wso2-production-endpoints:
   type: http
   urls:
-  - http://3.19.209.74:8595/api/users
+  - http://localhost:9193/loans
 x-wso2-response-cache:
   cacheTimeoutInSeconds: 300
   enabled: false
 x-wso2-sandbox-endpoints:
   type: http
   urls:
-  - http://3.19.209.74:8595/api/users
+  - http://localhost:9193/loans
 x-wso2-transports:
 - http
 - https
