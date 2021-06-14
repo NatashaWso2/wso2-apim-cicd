@@ -77,11 +77,11 @@ x-wso2-cors:
     - OPTIONS
 x-wso2-production-endpoints:
   urls:
-    - 'http://localhost:9197/payments'
+    - 'http://localhost:9197/bankpayments'
   type: http
 x-wso2-sandbox-endpoints:
   urls:
-    - 'http://localhost:9197/payments'
+    - 'http://localhost:9197/bankpayments'
   type: http
 x-wso2-basePath: /bank/payments
 x-wso2-transports:
