@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: BankBillPaymentsAPI
+  title: BankPaymentsAPI
   version: v1.0.0
 servers:
   - url: /
