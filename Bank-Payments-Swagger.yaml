@@ -73,7 +73,6 @@ x-wso2-cors:
     - PUT
     - POST
     - DELETE
-    - PATCH
     - OPTIONS
 x-wso2-production-endpoints:
   urls:
